@@ -758,7 +758,12 @@ function applyIdentity(name) {
   if (foot) foot.textContent = name;
 }
 
-applyIdentity(DISPLAY_NAME);
+// Only stamp the name now if config actually gave us one. With no config
+// (the proxy path), DISPLAY_NAME is just the "listener" fallback, and
+// writing that would flash over the name already in the markup until
+// loadLive() brings back the real one from the Last.fm profile. So in that
+// case leave the markup alone and let loadLive() fill it in.
+if (IDENTITY_FROM_CONFIG) applyIdentity(DISPLAY_NAME);
 renderArchive();
 observeReveals();
 bindTooltips($("archive"));
