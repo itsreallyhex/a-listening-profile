@@ -1,0 +1,14 @@
+# Netlify only reads this file. Vercel ignores it and picks up api/ on its own.
+#
+# Path A (static): you can delete this file. Netlify serves the folder as is.
+# Path B (proxy): this routes /api/lastfm to netlify/functions/lastfm.mjs so
+# the client uses the same path on both hosts. Set LASTFM_API_KEY and
+# LASTFM_USER in Site settings, Environment variables.
+
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/api/lastfm"
+  to = "/.netlify/functions/lastfm"
+  status = 200

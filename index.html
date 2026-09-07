@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>itsreallyhex · a listening profile</title>
+<meta name="description" content="Live Last.fm stats up top, and a frozen snapshot of the saved library below." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="art-bg" id="art-bg" aria-hidden="true">
+  <div class="art-layer" id="art-layer-a"></div>
+  <div class="art-layer" id="art-layer-b"></div>
+</div>
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+<div id="tooltip" role="status" aria-live="off"></div>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <p class="kicker reveal">A listening profile</p>
+    <h1 class="reveal" id="profile-name">itsreallyhex</h1>
+    <p class="lede reveal">
+      Two views of the same taste. The top half is live from Last.fm, so it
+      moves as music plays. The bottom half is the saved library, held still
+      at one moment so you can actually read it.
+    </p>
+    <div class="hero-meta reveal">
+      <a class="hero-link" href="#live">Live<span aria-hidden="true">→</span></a>
+      <a class="hero-link" href="#archive">Archive<span aria-hidden="true">→</span></a>
+    </div>
+  </header>
+
+  <!-- ============ LIVE ============ -->
+  <section class="chapter" id="live">
+    <div class="chapter-head reveal">
+      <span class="chapter-index">01</span>
+      <span class="chapter-name">Live</span>
+      <span class="chapter-src">Last.fm</span>
+    </div>
+
+    <div class="now reveal" id="now">
+      <div class="now-status">
+        <span class="dot" id="pulse"></span>
+        <span id="now-label" class="skeleton-text">Checking Last.fm</span>
+      </div>
+      <div class="now-track" id="now-track">&nbsp;</div>
+      <div class="now-artist" id="now-artist"></div>
+      <div class="now-meta" id="now-meta"></div>
+    </div>
+
+    <div class="stat-row reveal">
+      <div class="stat">
+        <div class="stat-num accent" id="stat-scrobbles">—</div>
+        <div class="stat-cap">plays counted</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="stat-artists">—</div>
+        <div class="stat-cap">artists heard</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="stat-since">—</div>
+        <div class="stat-cap">counting since</div>
+      </div>
+    </div>
+
+    <div class="block reveal">
+      <h2>Recently played</h2>
+      <ol class="track-list" id="recent">
+        <li class="skeleton-row"></li><li class="skeleton-row"></li>
+        <li class="skeleton-row"></li><li class="skeleton-row"></li>
+      </ol>
+    </div>
+
+    <div class="cols">
+      <div class="block reveal">
+        <h2>Most played <span class="h2-sub">all time</span></h2>
+        <ol class="rank-list" id="top-artists">
+          <li class="skeleton-row"></li><li class="skeleton-row"></li><li class="skeleton-row"></li>
+        </ol>
+      </div>
+      <div class="block reveal">
+        <h2>Most played albums <span class="h2-sub">all time</span></h2>
+        <ol class="rank-list" id="top-albums">
+          <li class="skeleton-row"></li><li class="skeleton-row"></li><li class="skeleton-row"></li>
+        </ol>
+      </div>
+    </div>
+
+    <p class="err" id="live-err" hidden></p>
+  </section>
+
+  <!-- ============ ARCHIVE ============ -->
+  <section class="chapter" id="archive">
+    <div class="chapter-head reveal">
+      <span class="chapter-index">02</span>
+      <span class="chapter-name">Archive</span>
+      <span class="chapter-src">Spotify export</span>
+    </div>
+
+    <p class="lede reveal">
+      These numbers come from one Spotify export of the whole saved library.
+      Nothing here updates. It is a photo, not a feed.
+    </p>
+
+    <p class="note reveal" id="archive-note" hidden></p>
+
+    <div class="block reveal">
+      <h2>What is in the library</h2>
+      <div id="arc-composition"></div>
+    </div>
+
+    <div class="block reveal">
+      <h2>Who fills it <span class="h2-sub">by track count</span></h2>
+      <div id="arc-artists"></div>
+    </div>
+
+    <div class="block reveal feature">
+      <h2>How much of it is Juice WRLD</h2>
+      <div class="big accent" id="arc-juice-num">—</div>
+      <div id="arc-juice-bar"></div>
+      <p class="cap" id="arc-juice-cap"></p>
+    </div>
+
+    <div class="cols">
+      <div class="block reveal">
+        <h2>How well known these songs are</h2>
+        <div id="arc-popularity"></div>
+        <p class="cap" id="arc-popularity-cap"></p>
+      </div>
+      <div class="block reveal">
+        <h2>Explicit tracks</h2>
+        <div class="big" id="arc-explicit-num">—</div>
+        <div id="arc-explicit-bar"></div>
+        <p class="cap" id="arc-explicit-cap"></p>
+      </div>
+    </div>
+
+    <div class="block reveal">
+      <h2>When the music came out</h2>
+      <div id="arc-years"></div>
+      <p class="cap" id="arc-years-cap"></p>
+    </div>
+
+    <div class="block reveal">
+      <h2>When tracks were added <span class="h2-sub">by month</span></h2>
+      <div id="arc-monthly"></div>
+      <p class="cap" id="arc-monthly-cap"></p>
+    </div>
+  </section>
+
+  <footer class="page-foot reveal">
+    <span id="foot-updated"></span>
+    <span class="foot-dot" aria-hidden="true">·</span>
+    <span id="foot-name">itsreallyhex</span>
+  </footer>
+</main>
+
+<!-- config.js holds your Last.fm key and stays out of git. Copy config.example.js to config.js first. -->
+<script src="config.js"></script>
+<script src="archive-data.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

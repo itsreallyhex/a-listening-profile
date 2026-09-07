@@ -1,0 +1,52 @@
+# --- Local config (your Last.fm API key lives here) ---
+config.js
+
+# --- Your Spotify export + analysis working files ---
+*.csv
+
+# --- Environment & secrets ---
+.env
+.env.*
+!.env.example
+*.local
+secrets.json
+
+# --- Claude / AI assistant files ---
+.claude/
+CLAUDE.md
+.mcp.json
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# --- Node / build tooling (if you add any later) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.cache/
+
+# --- Logs / misc ---
+*.log
+logs/
+*.bak
+*.tmp
