@@ -1,6 +1,6 @@
 # Listening profile
 
-[WebView](assets/Webview.png)
+![WebView](assets/Webview.png)
 
 One web page that shows what someone listens to, from two angles.
 
