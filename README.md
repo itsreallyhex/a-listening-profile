@@ -4,11 +4,13 @@
 
 One web page that shows what someone listens to, from two angles.
 
-The top half is **live**. It reads the Last.fm API when the page loads, and
-again every fifteen seconds after that, so it keeps up as music plays. You
-get the current or last track with a small pulse dot when something is on
-right now, the running count of plays and artists, a short list of recent
-tracks, and the all-time top artists and albums.
+The top half is **live**. It reads the Last.fm API when the page loads and
+keeps checking after that, so it stays current as music plays. You get the
+current or last track with a small pulse dot when something is on right now,
+the running count of plays and artists, a short list of recent tracks, and
+the all-time top artists and albums. What is playing refreshes every few
+seconds; the totals and top lists refresh on a slower timer since they
+barely move.
 
 The bottom half is the **archive**. It is a still photo of a Spotify library
 export: how the library breaks down by source, which artists take up the most
@@ -50,13 +52,13 @@ keeps the browser from being fussy about a few things.
 
 | key | needed? | what it does |
 | --- | --- | --- |
-| `lastfmApiKey` | yes | Your Last.fm API key |
-| `lastfmUser` | yes | Your Last.fm username |
+| `lastfmApiKey` | Path A only | Your Last.fm API key |
+| `lastfmUser` | Path A only | Your Last.fm username |
 | `displayName` | no | The name in the header and browser tab. Falls back to `lastfmUser`, then to the name on your Last.fm profile |
-| `refreshMs` | no | How long to wait between checks of Last.fm, in milliseconds. Default is `15000` |
+| `refreshMs` | no | How often to re-check what is playing, in milliseconds. Lower is snappier. Default is `8000`. The totals and top lists refresh on a fixed slower timer |
 
-On Path A, `lastfmApiKey` and `lastfmUser` are both required. On Path B you
-can leave them blank. The next section explains the difference.
+Path A puts the key in this file. Path B moves it to the server and you can
+leave both blank here. The next section explains the difference.
 
 ## The API key: two ways
 
