@@ -14,6 +14,12 @@ the all-time top artists and albums. What is playing refreshes every few
 seconds; the totals and top lists refresh on a slower timer since they
 barely move.
 
+> [!NOTE]
+> The live numbers only mean something if you have been scrobbling to
+> Last.fm for a while. Plays counted and artists heard come straight from
+> your history, so a fresh account will show almost nothing. Nothing stops
+> you from running it anyway, there just is not much to look at yet.
+
 The bottom half is the **archive**. It is a still photo of a Spotify library
 export: how the library breaks down by source, which artists take up the most
 room, how the popularity scores land, the explicit share, which years the
