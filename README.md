@@ -1,6 +1,7 @@
 # Listening profile
 
-[WebView](Assets/Webview.png)
+[WebView](assets/Webview.png)
+
 One web page that shows what someone listens to, from two angles.
 
 The top half is **live**. It reads the Last.fm API when the page loads, and
