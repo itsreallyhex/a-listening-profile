@@ -4,6 +4,8 @@
 
 One web page that shows what someone listens to, from two angles.
 
+See it live at [hexlisteningstates.vercel.app](https://hexlisteningstates.vercel.app).
+
 The top half is **live**. It reads the Last.fm API when the page loads and
 keeps checking after that, so it stays current as music plays. You get the
 current or last track with a small pulse dot when something is on right now,
