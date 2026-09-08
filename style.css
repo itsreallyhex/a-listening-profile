@@ -13,8 +13,8 @@
   --fg: #F0EEEA;
   --accent: #EF4B3D;
   --accent-soft: rgba(239, 75, 61, 0.14);
-  --muted: #87857e;
-  --muted-dim: #57564f;
+  --muted: #9a988f;
+  --muted-dim: #6b6961;
   --line: #1c1c1e;
   --fill: rgba(240, 238, 234, 0.62);
   --fill-dim: rgba(240, 238, 234, 0.10);
@@ -608,6 +608,17 @@ h2 .h2-sub {
   transition: color 200ms var(--ease), border-color 200ms var(--ease);
 }
 .foot-link:hover { color: var(--fg); border-color: var(--muted); }
+
+/* ---------- phone tuning ---------- */
+@media (max-width: 600px) {
+  /* The backdrop is small on a phone, so a 10px blur erased it. Ease the
+     blur and let a little more of the artwork through. */
+  .art-bg { filter: blur(5px) saturate(1) brightness(0.86); }
+  .art-bg.loaded { opacity: 0.42; }
+  /* Small light text over the sharper art needs its own shield. */
+  .kicker,
+  .lede { text-shadow: 0 1px 10px rgba(10, 10, 11, 0.7); }
+}
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {

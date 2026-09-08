@@ -340,7 +340,10 @@ function bindTooltips(root) {
 
 const progressEl = $("scroll-progress");
 const artBgEl = $("art-bg");
-const ART_BASE_OPACITY = 0.34;
+// A touch more on phones, where the backdrop is small and easy to miss.
+// Matches the .art-bg.loaded opacity in the max-width: 600px block.
+const ART_BASE_OPACITY =
+  window.matchMedia && window.matchMedia("(max-width: 600px)").matches ? 0.42 : 0.34;
 let progressQueued = false;
 function updateProgress() {
   progressQueued = false;
