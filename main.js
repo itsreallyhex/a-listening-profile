@@ -106,7 +106,7 @@ function fetchDirect(method, params) {
   });
 }
 
-function lastfm(method, params = {}) {
+function lastfmOnce(method, params = {}) {
   if (apiRoute === "proxy") {
     return fetchViaProxy(method, params).catch((err) => {
       // The proxy answered before and is gone now. Slip back to the direct
@@ -137,7 +137,21 @@ function lastfm(method, params = {}) {
       }
     );
   }
-  return routeCheck.then(() => lastfm(method, params));
+  return routeCheck.then(() => lastfmOnce(method, params));
+}
+
+// A dropped request or a brief blip should not cost a whole refresh cycle,
+// so retry a failed call a couple of times with a short backoff before
+// giving up. A "noProxy" error is a routing decision, not a blip, so it is
+// not retried.
+function lastfm(method, params = {}, attempt = 0) {
+  return lastfmOnce(method, params).catch((err) => {
+    if ((err && err.noProxy) || attempt >= 2) throw err;
+    const wait = 700 * (attempt + 1);
+    return new Promise((r) => setTimeout(r, wait)).then(() =>
+      lastfm(method, params, attempt + 1)
+    );
+  });
 }
 
 const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -375,7 +389,14 @@ function clearLiveSkeletons(labelText) {
   });
 }
 
+// When a full refresh comes back empty, do not sit on the broken page for
+// the whole FULL_MS gap. Retry sooner, backing off each time until things
+// recover or the delay reaches the normal cycle.
+let liveFailStreak = 0;
+let liveRetryTimer = null;
+
 async function loadLive() {
+  clearTimeout(liveRetryTimer);
   const calls = [
     ["recent", { m: "user.getRecentTracks", p: { limit: 14, extended: 1 } }],
     ["info", { m: "user.getInfo", p: {} }],
@@ -407,13 +428,18 @@ async function loadLive() {
         "No Last.fm access yet. Put a key in config.js, or deploy the /api/lastfm function. The README walks through both.";
       clearLiveSkeletons("Not set up");
     } else {
-      el.textContent = `Can't reach Last.fm right now. Trying again in ${Math.round(NOW_MS / 1000)} seconds.`;
+      liveFailStreak = Math.min(liveFailStreak + 1, 20);
+      const wait = Math.min(FULL_MS, 8000 * liveFailStreak);
+      el.textContent = `Can't reach Last.fm right now. Trying again in ${Math.round(wait / 1000)} seconds.`;
       clearLiveSkeletons("Could not load");
+      liveRetryTimer = setTimeout(loadLive, wait);
     }
   } else if (failed.length) {
+    liveFailStreak = 0;
     el.hidden = false;
     el.textContent = `Some Last.fm data did not load: ${failed.join(", ")}. Retrying soon.`;
   } else {
+    liveFailStreak = 0;
     el.hidden = true;
   }
   stampUpdated();
@@ -785,6 +811,7 @@ function startPolling() {
 function stopPolling() {
   clearInterval(nowTimer);
   clearInterval(fullTimer);
+  clearTimeout(liveRetryTimer);
 }
 startPolling();
 
@@ -794,6 +821,7 @@ document.addEventListener("visibilitychange", () => {
     stopPolling();
   } else {
     loadNowPlaying();
+    loadLive();
     startPolling();
   }
 });
