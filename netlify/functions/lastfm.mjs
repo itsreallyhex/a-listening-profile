@@ -13,9 +13,15 @@ const ALLOWED_METHODS = new Set([
   "user.getInfo",
   "user.getTopArtists",
   "user.getTopAlbums",
+  "user.getTopTracks",
+  // track.getInfo is how the page finds cover art for the top tracks list.
+  "track.getInfo",
 ]);
 
-const PASS_THROUGH = ["limit", "page", "period", "extended", "from", "to"];
+const PASS_THROUGH = [
+  "limit", "page", "period", "extended", "from", "to",
+  "artist", "track", "autocorrect",
+];
 
 const json = (status, body) =>
   new Response(JSON.stringify(body), {

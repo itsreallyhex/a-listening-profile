@@ -26,10 +26,16 @@ const ALLOWED_METHODS = new Set([
   "user.getInfo",
   "user.getTopArtists",
   "user.getTopAlbums",
+  "user.getTopTracks",
+  // track.getInfo is how the page finds cover art for the top tracks list.
+  "track.getInfo",
 ]);
 
 // Query params that are safe to pass straight through.
-const PASS_THROUGH = ["limit", "page", "period", "extended", "from", "to"];
+const PASS_THROUGH = [
+  "limit", "page", "period", "extended", "from", "to",
+  "artist", "track", "autocorrect",
+];
 
 export default async function handler(req, res) {
   const apiKey = process.env.LASTFM_API_KEY;

@@ -381,7 +381,7 @@ function clearLiveSkeletons(labelText) {
     label.classList.remove("skeleton-text");
     label.textContent = labelText;
   }
-  ["recent", "top-artists", "top-albums"].forEach((id) => {
+  ["recent", "top-artists", "top-albums", "top-tracks"].forEach((id) => {
     const list = $(id);
     if (list.querySelector(".skeleton-row")) {
       list.innerHTML = '<li class="muted">Could not load. Retrying soon.</li>';
@@ -400,8 +400,9 @@ async function loadLive() {
   const calls = [
     ["recent", { m: "user.getRecentTracks", p: { limit: 14, extended: 1 } }],
     ["info", { m: "user.getInfo", p: {} }],
-    ["artists", { m: "user.getTopArtists", p: { period: "overall", limit: 8 } }],
-    ["albums", { m: "user.getTopAlbums", p: { period: "overall", limit: 8 } }],
+    ["artists", { m: "user.getTopArtists", p: { period: "overall", limit: 10 } }],
+    ["albums", { m: "user.getTopAlbums", p: { period: "overall", limit: 10 } }],
+    ["tracks", { m: "user.getTopTracks", p: { period: "overall", limit: 10 } }],
   ];
 
   const settled = await Promise.allSettled(calls.map((c) => lastfm(c[1].m, c[1].p)));
@@ -419,6 +420,7 @@ async function loadLive() {
   if (data.info) renderInfo(data.info, data.artists);
   if (data.artists) renderTopArtists(data.artists);
   if (data.albums) renderTopAlbums(data.albums);
+  if (data.tracks) renderTopTracks(data.tracks);
 
   const el = $("live-err");
   if (failed.length === calls.length) {
@@ -572,6 +574,106 @@ function renderTopAlbums(data) {
       </li>`
     )
     .join("");
+}
+
+/* The top tracks list shows a cover thumbnail per row. Last.fm's
+   getTopTracks only ever returns its default star image, so the real
+   artwork comes from one track.getInfo call per track. Those results are
+   cached for the page session, so the 60s refresh does not fetch them
+   again. Tracks Last.fm has no art for show a small "no image" tile. */
+const trackArt = new Map(); // key -> url string ("" = none), or a pending promise
+
+function trackKey(artist, name) {
+  return `${String(artist).toLowerCase()} :: ${String(name).toLowerCase()}`;
+}
+
+// Resolve cover art one request at a time. A page load would otherwise fire
+// ten track.getInfo calls at Last.fm in one burst and risk a rate limit that
+// also trips the recent-tracks poll.
+let artQueue = Promise.resolve();
+function queueTrackArt(artist, name) {
+  const hit = trackArt.get(trackKey(artist, name));
+  if (typeof hit === "string") return Promise.resolve(hit);
+  if (hit) return hit;
+  const run = () => resolveTrackArt(artist, name);
+  const p = artQueue.then(run, run);
+  artQueue = p.catch(() => {});
+  return p;
+}
+
+function resolveTrackArt(artist, name) {
+  const k = trackKey(artist, name);
+  const hit = trackArt.get(k);
+  if (typeof hit === "string") return Promise.resolve(hit);
+  if (hit) return hit;
+  const p = lastfm("track.getInfo", { artist, track: name, autocorrect: 1 })
+    .then((info) => {
+      const album = info && info.track && info.track.album;
+      const url = album ? bestImage(album.image) : "";
+      trackArt.set(k, url);
+      return url;
+    })
+    .catch(() => {
+      trackArt.set(k, "");
+      return "";
+    });
+  trackArt.set(k, p);
+  return p;
+}
+
+// What to put in the thumbnail slot right now: the image if we already
+// have it, the "no image" tile if we know there is none, otherwise a
+// loading tile that renderTopTracks fills in once the art request returns.
+function trackArtCell(artist, name) {
+  const cached = trackArt.get(trackKey(artist, name));
+  if (cached === "") return '<span class="art art-none">no image</span>';
+  if (typeof cached === "string") return `<img class="art" src="${esc(cached)}" alt="">`;
+  return '<span class="art art-load"></span>';
+}
+
+function renderTopTracks(data) {
+  const list = $("top-tracks");
+  const items = (data && data.toptracks && data.toptracks.track) || [];
+  if (!items.length) {
+    list.innerHTML = '<li class="muted">Nothing to show.</li>';
+    return;
+  }
+  list.innerHTML = items
+    .map((t, i) => {
+      const artist = artistName(t.artist);
+      return `<li>
+        <span class="idx">${i + 1}</span>
+        ${trackArtCell(artist, t.name)}
+        <span class="nm">${link(t.url, t.name)}<span class="sub">${esc(artist)}</span></span>
+        <span class="ct">${nf(t.playcount)} plays</span>
+      </li>`;
+    })
+    .join("");
+
+  items.forEach((t, i) => {
+    const li = list.children[i];
+    const cell = li && li.querySelector(".art-load");
+    if (!cell) return;
+    queueTrackArt(artistName(t.artist), t.name).then((url) => {
+      if (!cell.isConnected) return;
+      if (!url) {
+        cell.className = "art art-none";
+        cell.textContent = "no image";
+        return;
+      }
+      const img = new Image();
+      img.className = "art";
+      img.alt = "";
+      img.onerror = () => {
+        const span = document.createElement("span");
+        span.className = "art art-none";
+        span.textContent = "no image";
+        img.replaceWith(span);
+      };
+      img.src = url;
+      cell.replaceWith(img);
+    });
+  });
 }
 
 /* ============================================================

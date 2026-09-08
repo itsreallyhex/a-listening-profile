@@ -376,7 +376,8 @@ h2 .h2-sub {
 
 /* stagger children of a revealed list */
 .reveal.in .track-list li,
-.reveal.in .rank-list li { animation: rowIn 460ms var(--ease) both; }
+.reveal.in .rank-list li,
+.reveal.in .art-list li { animation: rowIn 460ms var(--ease) both; }
 .reveal.in li:nth-child(1) { animation-delay: 40ms; }
 .reveal.in li:nth-child(2) { animation-delay: 80ms; }
 .reveal.in li:nth-child(3) { animation-delay: 120ms; }
@@ -385,6 +386,8 @@ h2 .h2-sub {
 .reveal.in li:nth-child(6) { animation-delay: 240ms; }
 .reveal.in li:nth-child(7) { animation-delay: 280ms; }
 .reveal.in li:nth-child(8) { animation-delay: 320ms; }
+.reveal.in li:nth-child(9) { animation-delay: 360ms; }
+.reveal.in li:nth-child(10) { animation-delay: 400ms; }
 @keyframes rowIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
@@ -419,6 +422,56 @@ h2 .h2-sub {
   text-overflow: ellipsis;
 }
 .rank-list .ct { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+/* ---------- art list (top tracks, with cover thumbnails) ---------- */
+.art-list li {
+  display: grid;
+  grid-template-columns: 16px 44px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.art-list .idx { color: var(--muted-dim); font-size: 12px; text-align: right; }
+.art-list .art {
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  object-fit: cover;
+  background: var(--fill-dim);
+  display: block;
+}
+.art-list .art-load { animation: sk 1.4s ease-in-out infinite; }
+.art-list .art-none {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.15;
+  padding: 4px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 9px;
+  color: var(--muted-dim);
+}
+.art-list .nm {
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.art-list .nm a { color: inherit; text-decoration: none; }
+.art-list .nm a:hover { color: var(--accent); }
+.art-list .nm .sub {
+  display: block;
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.art-list .ct { color: var(--muted); font-size: 12px; white-space: nowrap; }
 
 /* ---------- horizontal bars ---------- */
 .hbar {
