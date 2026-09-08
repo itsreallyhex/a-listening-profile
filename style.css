@@ -173,6 +173,18 @@ h1 {
   line-height: 1;
 }
 
+/* Held while the name loads from the Last.fm profile, so the hero keeps its
+   height and nobody's name is baked into the markup. applyIdentity() drops
+   the class once the real name is in. */
+h1.loading {
+  display: inline-block;
+  width: min(6em, 80%);
+  border-radius: 10px;
+  color: transparent;
+  background: var(--fill-dim);
+  animation: sk 1.4s ease-in-out infinite;
+}
+
 .lede {
   color: var(--muted);
   font-size: clamp(15px, 2.4vw, 17px);
@@ -587,6 +599,8 @@ h2 .h2-sub {
   gap: 12px;
 }
 .foot-dot { color: var(--muted-dim); }
+/* The name and its leading dot stay hidden until the profile loads. */
+#foot-name-wrap:not([hidden]) { display: inline-flex; align-items: baseline; gap: 12px; }
 .foot-link {
   color: inherit;
   text-decoration: none;

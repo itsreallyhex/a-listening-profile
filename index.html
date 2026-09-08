@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>itsreallyhex · Now & Then</title>
+<title>Now & Then</title>
 <meta name="description" content="Live Last.fm stats up top, and a frozen snapshot of the saved library below." />
 <link rel="icon" href="assets/now-and-then-plain.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,7 +23,7 @@
   <!-- ============ HERO ============ -->
   <header class="hero">
     <p class="kicker reveal">Now &amp; Then</p>
-    <h1 class="reveal" id="profile-name">itsreallyhex</h1>
+    <h1 class="reveal loading" id="profile-name">&nbsp;</h1>
     <p class="lede reveal">
       Two views of the same taste. The top half is live from Last.fm, so it
       moves as music plays. The bottom half is the saved library, held still
@@ -164,8 +164,10 @@
 
   <footer class="page-foot reveal">
     <span id="foot-updated"></span>
-    <span class="foot-dot" aria-hidden="true">·</span>
-    <span id="foot-name">itsreallyhex</span>
+    <span id="foot-name-wrap" hidden>
+      <span class="foot-dot" aria-hidden="true">·</span>
+      <span id="foot-name"></span>
+    </span>
     <span class="foot-dot" aria-hidden="true">·</span>
     <a class="foot-link" href="https://github.com/itsreallyhex/now-and-then" target="_blank" rel="noopener">Source on GitHub</a>
   </footer>

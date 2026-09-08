@@ -436,6 +436,9 @@ async function loadLive() {
       clearLiveSkeletons("Could not load");
       liveRetryTimer = setTimeout(loadLive, wait);
     }
+    // No profile came back, so the hero name would sit as a shimmer forever.
+    // Fall back to whatever config gave us ("listener" when there is none).
+    if (!$("profile-name").textContent.trim()) applyIdentity(DISPLAY_NAME);
   } else if (failed.length) {
     liveFailStreak = 0;
     el.hidden = false;
@@ -881,7 +884,12 @@ function stampUpdated() {
 function applyIdentity(name) {
   document.title = `${name} · Now & Then`;
   const h = $("profile-name");
-  if (h) h.textContent = name;
+  if (h) {
+    h.textContent = name;
+    h.classList.remove("loading");
+  }
+  const wrap = $("foot-name-wrap");
+  if (wrap) wrap.hidden = false;
   const foot = $("foot-name");
   if (foot) foot.textContent = name;
 }
