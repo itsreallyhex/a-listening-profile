@@ -7,13 +7,9 @@ playing now, and the library as it stood then.
 
 See it live at [hexlisteningstates.vercel.app](https://hexlisteningstates.vercel.app).
 
-The top half is **live**. It reads the Last.fm API when the page loads and
-keeps checking after that, so it stays current as music plays. You get the
-current or last track with a small pulse dot when something is on right now,
-the running count of plays and artists, a short list of recent tracks, and
-the all-time top artists and albums. What is playing refreshes every few
-seconds; the totals and top lists refresh on a slower timer since they
-barely move.
+The top half is **live** from Last.fm and moves as music plays. The bottom
+half is the **archive**, a frozen Spotify export that holds still so you can
+sit and read it.
 
 > [!NOTE]
 > The live numbers only mean something if you have been scrobbling to
@@ -21,16 +17,51 @@ barely move.
 > your history, so a fresh account will show almost nothing. Nothing stops
 > you from running it anyway, there just is not much to look at yet.
 
-The bottom half is the **archive**. It is a still photo of a Spotify library
-export: how the library breaks down by source, which artists take up the most
-room, how the popularity scores land, the explicit share, which years the
-music comes from, and how many tracks got added each month. Hover any bar to
-read the exact number behind it.
-
 It is plain HTML, one stylesheet, and one JavaScript file. There is no build
 step and no framework. By default nothing runs on a server, though you can
 add a small function to hide the API key if the page will be public. Both
 paths are covered below.
+
+## What is on the page
+
+One long scroll, two parts.
+
+### Live
+
+Read from Last.fm when the page opens, then kept current while the tab is
+open.
+
+- The listener's name up top, pulled from their Last.fm profile.
+- What is playing now, or the last thing played, with the artist and album
+  under it. A dot pulses when something is on right now. If the album or EP
+  it comes from has a cover, that art fills the background as a soft blur and
+  crossfades when the track changes. Tracks with no cover leave the plain
+  dark background.
+- Three counters: total plays, how many different artists, and the year the
+  count started.
+- Recently played, the last several scrobbles with how long ago each was.
+- Most played tracks, the top ten of all time, each with its cover. Last.fm
+  has no art for some smaller artists, so those rows show a small "no image"
+  tile.
+- Most played artists and most played albums, ten each.
+
+What is playing refreshes every few seconds. The counters and lists refresh
+about once a minute, since they barely move. If Last.fm cannot be reached the
+page says so and keeps trying, backing off a little each time.
+
+### Archive
+
+Built once from a Spotify export and never updated after that.
+
+- What is in the library, split by source: proper releases, local files, and
+  the odd rip hiding as a podcast.
+- Which artists take up the most room, by track count.
+- How much of the whole thing is a single artist.
+- How the Spotify popularity scores land, and what share is marked explicit.
+- Which years the music comes from.
+- How many tracks were added each month.
+
+Hover any bar for the exact number behind it.
 
 ## Getting it running
 
