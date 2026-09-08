@@ -751,7 +751,7 @@ function stampUpdated() {
 /* ---------- boot ---------- */
 
 function applyIdentity(name) {
-  document.title = `${name} · a listening profile`;
+  document.title = `${name} · Now & Then`;
   const h = $("profile-name");
   if (h) h.textContent = name;
   const foot = $("foot-name");

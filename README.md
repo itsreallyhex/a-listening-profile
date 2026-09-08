@@ -1,8 +1,9 @@
-# Listening profile
+# Now & Then
 
 ![WebView](assets/Webview.png)
 
-One web page that shows what someone listens to, from two angles.
+One web page that shows what someone listens to, from two angles: what is
+playing now, and the library as it stood then.
 
 See it live at [hexlisteningstates.vercel.app](https://hexlisteningstates.vercel.app).
 
